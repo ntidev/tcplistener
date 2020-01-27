@@ -1,0 +1,23 @@
+#!/usr/bin/env ansible-playbook
+---
+- hosts: tcplistener
+  remote_user: ansible
+  become: true
+
+  tasks:
+    - name: Copy the binary
+      copy:
+        src: tcplistener
+        dest: /usr/bin/tcplistener
+
+    - name: Copy the service
+      template:
+        src: tcplistener.service.j2
+        dest: /etc/systemd/system/tcplistener.service
+
+    - name: Start/Restart the TCP Listener
+      systemd:
+        name: tcplistener
+        enabled: yes
+        daemon_reload: yes
+        state: restarted
