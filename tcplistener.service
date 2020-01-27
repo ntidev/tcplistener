@@ -1,0 +1,26 @@
+[Unit]
+Description=TCP Listener
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+LimitNOFILE=1024
+
+Restart=on-failure
+RestartSec=10
+startLimitIntervalSec=60
+
+ExecStart=/usr/bin/tcplistener
+
+# make sure log directory exists and owned by syslog
+PermissionsStartOnly=true
+ExecStartPre=/bin/mkdir -p /var/log/tcplistener
+ExecStartPre=/bin/chmod 755 /var/log/tcplistener
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=tcplistener
+
+[Install]
+WantedBy=multi-user.target
